@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InitWidget</class>
+ <widget class="QWidget" name="InitWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>768</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>80</y>
+     <width>741</width>
+     <height>220</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>36</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>南通维尔斯机械科技有限公司
+Nantong Wealth Technical Co, Ltd</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>342</x>
+     <y>656</y>
+     <width>340</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>21</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>系统初始化中...
+Initialization...</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
