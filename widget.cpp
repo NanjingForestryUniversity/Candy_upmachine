@@ -40,6 +40,7 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
+    system("mkdir -p /home/nvidia/candyPic");
     this->setWindowFlags(Qt::Widget);
     this->showFullScreen();
     init_window();
@@ -188,19 +189,6 @@ void Widget::connect_signals()
     connect(ui->btn_channel_up, SIGNAL(clicked()), this, SLOT(On_btnchannelup_click()));
     connect(ui->btn_channel_down, SIGNAL(clicked()), this, SLOT(On_btnchanneldown_click()));
     connect(ui->btn_channel_send, SIGNAL(clicked()), this, SLOT(On_btn_channel_send_clicked()));
-//    connect(ui->btn_1, SIGNAL(clicked()), this, SLOT(On_btn_1_clicked()));
-//    connect(ui->btn_2, SIGNAL(clicked()), this, SLOT(On_btn_2_clicked()));
-//    connect(ui->btn_3, SIGNAL(clicked()), this, SLOT(On_btn_3_clicked()));
-//    connect(ui->btn_4, SIGNAL(clicked()), this, SLOT(On_btn_4_clicked()));
-//    connect(ui->btn_5, SIGNAL(clicked()), this, SLOT(On_btn_5_clicked()));
-//    connect(ui->btn_6, SIGNAL(clicked()), this, SLOT(On_btn_6_clicked()));
-//    connect(ui->btn_7, SIGNAL(clicked()), this, SLOT(On_btn_7_clicked()));
-//    connect(ui->btn_8, SIGNAL(clicked()), this, SLOT(On_btn_8_clicked()));
-//    connect(ui->btn_9, SIGNAL(clicked()), this, SLOT(On_btn_9_clicked()));
-//    connect(ui->btn_0, SIGNAL(clicked()), this, SLOT(On_btn_0_clicked()));
-//    connect(ui->btn_dot, SIGNAL(clicked()), this, SLOT(On_btn_dot_clicked()));
-//    connect(ui->btn_del, SIGNAL(clicked()), this, SLOT(On_btn_del_clicked()));
-//    connect(ui->btn_clr, SIGNAL(clicked()), this, SLOT(On_btn_clr_clicked()));
 }
 
 void Widget::On_btn_Tab1_2_click()
@@ -224,6 +212,7 @@ void Widget::On_btnStart_click()
    connect(process_img, SIGNAL(send_res(QVector<bad_candy_box>)), this, SLOT(drawbox(QVector<bad_candy_box>)), Qt::BlockingQueuedConnection);
    connect(process_img, SIGNAL(send_tab(uint8_t*)), this, SLOT(get_tab(uint8_t*)), Qt::BlockingQueuedConnection);
 
+   ui->label_warning->setText(" ");
    int n = emptybuff.available();
    if(n < 2)
    {
@@ -238,7 +227,7 @@ void Widget::On_btnStart_click()
    QByteArray ba = delay_time.toLatin1();
    char* dt = ba.data();
    char send_tab[12];
-   qDebug() << dt[0] << dt[1] <<dt[2] << dt[3];
+//   qDebug() << dt[0] << dt[1] <<dt[2] << dt[3];
    send_tab[0] = 0xAA;
    send_tab[1] = 0x00;
    send_tab[2] = 0x06;
@@ -348,24 +337,10 @@ void Widget::On_bthStop_click()
     process_img->exitThread();
     process_img->wait();
 
-//
-    //my_test_thread
-//    grab_img->wait();
-//    if(grab_img->isFinished())
-//    {
-//        qDebug()<<"grab thread finish";
-//    }
-//
-
-    if(process_img->isFinished())
+    if(!process_img->isFinished())
     {
-        qDebug()<<"process thread finish";
+        qDebug()<<"process thread finish failed";
     }
-
-
-//
-//    delete grab_img;
-//
 
     delete process_img;
 
@@ -586,6 +561,12 @@ void Widget::judge_password(QString password)
 
 void Widget::showimage(cv::Mat img)
 {
+//    if(loss_flag == true)
+//    {
+//        ui->label_warning->setText("loss");
+//        QApplication::processEvents();
+//        loss_flag = false;
+//    }
     static int counter = 0;
     if(save_flag && counter == 0)
     {
@@ -620,29 +601,27 @@ void Widget::drawbox(QVector<bad_candy_box> bounding_box)
         QRect rect(bounding_box[i].pointA_x* (pix.width() / 2376.0f), bounding_box[i].pointA_y* (pix.height() / 584.0f), width, height);
         rects << rect;
     }
-
     painter.drawRects(rects);
     ui->showlabel->setPixmap(pix);
 
-//    if(empty_flag == false)
+//    if(loss_flag)
 //    {
-//        QDateTime time = QDateTime::currentDateTime();648
-//        QString str = time.toString("yyyyMMddhhmmss");
-//        QString filepath = RESULT_PATH + str + ".bmp";.
-//#ifdef DEBUG
-//        cv::imwrite(filepath.toLatin1().data(), defect_pic);
-//#else
-//        pix.save(filepath);
-//#endif
-//        empty_flag = true;
+////        uint8_t buf[3008] = {0};
+////        uint8_t zero[3000] = {0};
+//////        socket->write((const char*)buf, 3000);
+////        buf[0] = 0xAA;
+////        buf[1] = 0x0B;
+////        buf[2] = 0xBA;
+////        buf[3] = 'd';
+////        buf[4] = 'a';
+////        buf[3005] = 0xFF;
+////        buf[3006] = 0xFF;
+////        buf[3007] = 0xBB;
+////        memcpy(buf+5, zero, 3000);
+////        socket->write((const char*)buf, 3008);
+//        loss_flag = false;
 //    }
 
-    if(loss_flag)
-    {
-        uint8_t buf[2500] = {0};
-        socket->write((const char*)buf, 2500);
-        loss_flag = false;
-    }
 }
 
 void Widget::showimage_test(cv::Mat img)
@@ -684,6 +663,7 @@ void Widget::ServerNewConnection()
     ui->MCU_status->setStyleSheet("QLabel{background-color:rgb(0,255,0);}");
     ui->MCU_status->setText(QString::fromLocal8Bit("已连接"));
     qDebug()<<"new connection";
+    connect(socket, SIGNAL(readyRead()), this, SLOT(readfrom_lowermachine()));
 
     //char send_buf[13] = {0xAA, 0x00, 0x07, 'p', 'o', 'w', 'e', 'r', 'o', 'n', 0xFF, 0xFF, 0xBB};
     //socket->write((const char*)send_buf, 13);
@@ -785,7 +765,7 @@ void Widget::On_btnImportImg_click()
     }
     qDebug()<<filepath;
     QString str = SAVE_IMAGE_PATH;
-    QString command = "cp " + str + "*\ " + filepath;
+    QString command = "mv " + str + "*\ " + filepath + ";sync";
     QMessageBox box;
     box.setText("export?");
     box.setStandardButtons(QMessageBox::Yes|QMessageBox::No);
@@ -793,9 +773,13 @@ void Widget::On_btnImportImg_click()
     int res = box.exec();
     if(res == QMessageBox::Yes)
     {
-        ui->btnImportImg->setText(QString::fromLocal8Bit("导出中"));
+        ui->btnImportImg->setText(QString::fromLocal8Bit("导出中..."));
+//        ui->btnImportImg->setStyleSheet("background-color:rgb(255,0,0)");
+        QApplication::processEvents();
         system(command.toUtf8().data());
+
         ui->btnImportImg->setText(QString::fromLocal8Bit("导出图片\nExport Images"));
+//        ui->btnImportImg->setStyleSheet("background-color:rgb(0,255,0)");
     }
 }
 
@@ -1203,264 +1187,13 @@ void Widget::On_btn_channel_send_clicked()
     socket->write((const char*)buf, TRIGGER_PULSE_NUMBER * (VALVE_NUMBER / 8) + 8);
 }
 
-//void Widget::On_btn_1_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("1");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("1");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_2_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("2");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("2");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_3_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("3");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("3");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_4_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("4");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("4");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_5_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("5");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("5");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_6_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("6");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("6");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_7_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("7");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("7");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_8_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("8");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("8");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_9_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("9");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("9");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_0_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("0");
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append("0");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_dot_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QDoubleSpinbox"))
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        str.append(".");
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_del_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        if(str.size()==0) return;
-//        str = str.left(str.size()-1);
-
-//        spinbox->setValue(str.toInt());
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        int value = spinbox->value();
-//        QString str = QString::number(value);
-//        if(str.size()==0) return;
-//        str = str.left(str.size()-1);
-//        spinbox->setValue(str.toDouble());
-//    }
-//}
-
-//void Widget::On_btn_clr_clicked()
-//{
-//    QWidget* m_widget = this->focusWidget();
-//    if(m_widget->inherits("QSpinBox"))
-//    {
-//        QSpinBox* spinbox = qobject_cast<QSpinBox*>(m_widget);
-//        spinbox->clear();
-//    }
-//    else
-//    {
-//        QDoubleSpinBox* spinbox = qobject_cast<QDoubleSpinBox*>(m_widget);
-//        spinbox->cleanText();
-//    }
-//}
+void Widget::readfrom_lowermachine()
+{
+    char recbuf[8] = {0};
+    int ret = socket->read(recbuf, 8);
+    if(ret > 0){
+//        std::cout << "loss loss loss" << std::endl;
+//        fflush(0);
+        ui->label_warning->setText("error");
+    }
+}

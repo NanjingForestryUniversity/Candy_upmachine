@@ -26,7 +26,7 @@
     <string notr="true">background-color: rgb(218, 239, 252);</string>
    </property>
    <property name="currentIndex">
-    <number>4</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab_1">
     <attribute name="title">
@@ -2806,6 +2806,27 @@ Parameters</string>
       <font>
        <pointsize>18</pointsize>
       </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_warning">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>530</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:rgb(255, 0, 0);</string>
      </property>
      <property name="text">
       <string/>

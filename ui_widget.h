@@ -42,6 +42,7 @@ public:
     QPushButton *btn_Tab2_1;
     QPushButton *btn_Tab2_5;
     QLabel *label_stop;
+    QLabel *label_warning;
     QWidget *tab_3;
     QPushButton *btn_Tab3_4;
     QPushButton *btn_Tab3_6;
@@ -524,6 +525,11 @@ public:
         QFont font4;
         font4.setPointSize(18);
         label_stop->setFont(font4);
+        label_warning = new QLabel(tab_2);
+        label_warning->setObjectName(QString::fromUtf8("label_warning"));
+        label_warning->setGeometry(QRect(530, 530, 141, 41));
+        label_warning->setFont(font4);
+        label_warning->setStyleSheet(QString::fromUtf8("color:rgb(255, 0, 0);"));
         tabWidget->addTab(tab_2, QString());
         tab_3 = new QWidget();
         tab_3->setObjectName(QString::fromUtf8("tab_3"));
@@ -1352,7 +1358,7 @@ public:
 
         retranslateUi(Widget);
 
-        tabWidget->setCurrentIndex(4);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(Widget);
@@ -1381,6 +1387,7 @@ public:
         btn_Tab2_5->setText(QApplication::translate("Widget", "\345\217\202\346\225\260\350\260\203\346\225\264\n"
 "Parameters", 0, QApplication::UnicodeUTF8));
         label_stop->setText(QString());
+        label_warning->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("Widget", "Tab 2", 0, QApplication::UnicodeUTF8));
         btn_Tab3_4->setText(QApplication::translate("Widget", "\347\233\270\346\234\272\345\217\202\346\225\260\350\256\276\347\275\256\n"
 "Camera Parameters", 0, QApplication::UnicodeUTF8));

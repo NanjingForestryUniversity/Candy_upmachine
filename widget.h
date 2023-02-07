@@ -11,6 +11,7 @@
 #include "thread.h"
 #include "camera.h"
 #include "correct.h"
+#include "qprocess.h"
 
 //#define DEBUG
 
@@ -105,19 +106,7 @@ private slots:
     void On_btn0_clicked();
     void On_btn_DEL_clicked();
 
-//    void On_btn_1_clicked();
-//    void On_btn_2_clicked();
-//    void On_btn_3_clicked();
-//    void On_btn_4_clicked();
-//    void On_btn_5_clicked();
-//    void On_btn_6_clicked();
-//    void On_btn_7_clicked();
-//    void On_btn_8_clicked();
-//    void On_btn_9_clicked();
-//    void On_btn_0_clicked();
-//    void On_btn_dot_clicked();
-//    void On_btn_del_clicked();
-//    void On_btn_clr_clicked();
+    void readfrom_lowermachine();
 
 private:
     Ui::Widget *ui;

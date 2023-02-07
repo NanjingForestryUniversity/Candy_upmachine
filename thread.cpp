@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <iostream>
 
 QSemaphore emptybuff(2);                   //空缓冲区信号量
 QSemaphore fullbuff(0);                    //正在处理的缓冲区信号量
@@ -39,7 +40,10 @@ extern void __stdcall onImageDataCallBackFunc(unsigned char * pData, MV_FRAME_OU
         if(!emptybuff.tryAcquire())      //申请空缓冲区
         {
             loss_flag = true;
-            qDebug()<<"loss loss loss loss loss loss loss loss";
+
+            std::cout << ">>> loss loss loss loss <<<" << std::endl;
+            fflush(0);
+
             return;
         }
 
@@ -81,7 +85,7 @@ Process_img::Process_img(QObject *parent) : QThread(parent), m_stop(false)
 
 void Process_img::run()
 {
-    qDebug()<<"deal thread:"<<QThread::currentThreadId();
+//    qDebug()<<"deal thread:"<<QThread::currentThreadId();
 
     int n = fullbuff.available();              //申请处理使用的缓冲区
     if(n > 0)                                  //确保为0
@@ -219,23 +223,7 @@ void Process_img::data_process(cv::Mat img)
         if(defect_size < blow_time)
         {
             int compensation = (blow_time - defect_size) / 2;
-//            if (start - compensation < 0)
-//            {
-//                start = 0;
-//            }
-//            else
-//            {
-//                start = start - compensation;
-//            }
 
-//            if (end + compensation > (PULSE_NUMBER-1))
-//            {
-//                end = PULSE_NUMBER-1;
-//            }
-//            else
-//            {
-//                end = end + compensation;
-//            }
             if((start - compensation > 0) && ((end + compensation) < PULSE_NUMBER - 1))
             {
                 start = start - compensation;

@@ -1,6 +1,6 @@
 # {05D8C294-F295-4dfb-9D01-096BD04049F4}
 # GenApi persistence file (version 3.0.0)
-# Device = HIKROBOT::HIKCamera -- HIKROBOT GigE Vision Camera Interface -- Device version = 1.2.0 -- Product GUID = EE4B7E09-DA29-4956-A1EC-212263331CFC -- Product version GUID = 79ace398-62e3-44a6-8845-f81aaf104382
+# Device = GEV::Camera -- GigE Vision Camera Interface -- Device version = 1.2.0 -- Product GUID = EE4B7E09-DA29-4956-A1EC-212263331CFC -- Product version GUID = 79ace398-62e3-44a6-8845-f81aaf104382
 DeviceLinkSelector	0
 DeviceLinkHeartbeatMode	On
 DeviceLinkSelector	0
@@ -64,7 +64,7 @@ AcquisitionFrameRate	11.57
 AcquisitionFrameRateEnable	1
 TriggerSelector	FrameBurstStart
 TriggerSelector	FrameBurstStart
-TriggerMode	On
+TriggerMode	Off
 TriggerSelector	FrameBurstStart
 TriggerSelector	FrameBurstStart
 TriggerSource	Line2
@@ -239,6 +239,7 @@ AutoFunctionAOIUsageWhiteBalance	0
 AutoFunctionAOISelector	AOI1
 UserSetSelector	Default
 UserSetDefault	Default
+GevPAUSEFrameReception	0
 GevHeartbeatTimeout	3000
 GevGVCPHeartbeatDisable	0
 GevMCTT	0

@@ -22,7 +22,7 @@ static const uint qt_meta_data_Widget[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      48,   14, // methods
+      49,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -80,6 +80,7 @@ static const uint qt_meta_data_Widget[] = {
     1023,   24,   24,   24, 0x08,
     1041,   24,   24,   24, 0x08,
     1059,   24,   24,   24, 0x08,
+    1080,   24,   24,   24, 0x08,
 
        0        // eod
 };
@@ -114,6 +115,7 @@ static const char qt_meta_stringdata_Widget[] = {
     "On_btn6_clicked()\0On_btn7_clicked()\0"
     "On_btn8_clicked()\0On_btn9_clicked()\0"
     "On_btn0_clicked()\0On_btn_DEL_clicked()\0"
+    "readfrom_lowermachine()\0"
 };
 
 void Widget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -170,6 +172,7 @@ void Widget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 45: _t->On_btn9_clicked(); break;
         case 46: _t->On_btn0_clicked(); break;
         case 47: _t->On_btn_DEL_clicked(); break;
+        case 48: _t->readfrom_lowermachine(); break;
         default: ;
         }
     }
@@ -207,9 +210,9 @@ int Widget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 48)
+        if (_id < 49)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 48;
+        _id -= 49;
     }
     return _id;
 }
